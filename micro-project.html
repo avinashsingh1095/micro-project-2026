@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AirSense — Avinash Singh Paviya</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:    #05080d;
+  --bg2:   #090e17;
+  --bg3:   #0d1520;
+  --bg4:   #111c2b;
+  --accent:  #00e5ff;
+  --accent2: #00ff88;
+  --accent3: #ff6b35;
+  --accent4: #a78bfa;
+  --text:    #c0d8f0;
+  --text-dim:#4d6a88;
+  --border:  rgba(0,229,255,0.12);
+  --border2: rgba(0,229,255,0.25);
+  --glow:    0 0 18px rgba(0,229,255,0.35);
+  --glow2:   0 0 18px rgba(0,255,136,0.35);
+  --glow3:   0 0 18px rgba(167,139,250,0.35);
+}
+
+/* ── RESET ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;font-weight:400;-webkit-font-smoothing:antialiased;overflow-x:hidden;cursor:none}
+
+/* ── CUSTOM CURSOR ── */
+#cur{position:fixed;width:10px;height:10px;background:var(--accent);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);box-shadow:0 0 12px var(--accent),0 0 24px var(--accent);transition:transform .08s;mix-blend-mode:screen}
+#cur-ring{position:fixed;width:34px;height:34px;border:1px solid rgba(0,229,255,.45);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .14s ease}
+body:hover #cur-ring{opacity:1}
+
+/* ── GRID BACKGROUND ── */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:
+    linear-gradient(rgba(0,229,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,229,255,.025) 1px,transparent 1px);
+  background-size:44px 44px;
+  pointer-events:none;z-index:0;
+}
+
+/* ── SCANLINES ── */
+body::after{
+  content:'';position:fixed;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.06) 3px,rgba(0,0,0,.06) 4px);
+  pointer-events:none;z-index:1;
+}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(5,8,13,.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1140px;margin:0 auto;padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:62px}
+.nav-logo{font-family:'Orbitron',monospace;font-size:17px;font-weight:900;color:var(--accent);letter-spacing:.2em;text-shadow:var(--glow);text-decoration:none}
+.nav-logo span{color:var(--accent2)}
+.nav-links{display:flex;gap:32px}
+.nav-links a{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-dim);text-decoration:none;letter-spacing:.14em;text-transform:uppercase;transition:color .25s,text-shadow .25s}
+.nav-links a:hover{color:var(--accent);text-shadow:var(--glow)}
+.nav-badge{display:inline-flex;align-items:center;gap:7px;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--accent2);border:1px solid rgba(0,255,136,.25);background:rgba(0,255,136,.06);padding:6px 14px;border-radius:2px;letter-spacing:.1em}
+.nav-badge::before{content:'';width:6px;height:6px;background:var(--accent2);border-radius:50%;animation:blink 1.8s ease infinite;box-shadow:var(--glow2)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+
+/* ── HERO ── */
+.hero{position:relative;z-index:10;min-height:100vh;display:flex;align-items:center;padding:100px 0 60px;border-bottom:1px solid var(--border)}
+.hero-inner{max-width:1140px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.hero-tag{display:inline-flex;align-items:center;gap:10px;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--accent2);letter-spacing:.16em;text-transform:uppercase;margin-bottom:24px;padding:7px 14px;border:1px solid rgba(0,255,136,.2);background:rgba(0,255,136,.04)}
+.hero-tag::before{content:'';width:5px;height:5px;background:var(--accent2);border-radius:50%;animation:blink 1.8s infinite}
+h1{font-family:'Orbitron',monospace;font-size:clamp(32px,5.5vw,68px);font-weight:900;line-height:1.05;color:#fff;margin-bottom:24px;letter-spacing:-.01em}
+h1 em{font-style:normal;color:var(--accent);text-shadow:var(--glow)}
+.hero-desc{font-size:17px;line-height:1.75;color:var(--text-dim);margin-bottom:40px;max-width:520px}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap}
+.btn-p{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:13px 28px;background:var(--accent);color:var(--bg);text-decoration:none;transition:all .25s;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%)}
+.btn-p:hover{background:var(--accent2);box-shadow:var(--glow2);transform:translateY(-2px)}
+.btn-s{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:13px 28px;background:transparent;color:var(--accent);border:1px solid var(--accent);text-decoration:none;transition:all .25s;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%)}
+.btn-s:hover{background:rgba(0,229,255,.08);box-shadow:var(--glow)}
+
+/* DEVICE MOCKUP */
+.hero-visual{display:flex;justify-content:center;animation:fadeUp .9s .3s both}
+.device{background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:28px;width:290px;box-shadow:var(--glow),inset 0 1px 0 rgba(255,255,255,.04)}
+.device-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.device-id{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:.12em;text-transform:uppercase}
+.device-led{width:8px;height:8px;background:var(--accent2);border-radius:50%;box-shadow:var(--glow2);animation:blink 2s infinite}
+.oled{background:#080d14;border:1px solid rgba(0,229,255,.15);border-radius:6px;padding:16px;margin-bottom:20px;font-family:'Share Tech Mono',monospace;font-size:12.5px;line-height:2}
+.or{display:flex;justify-content:space-between}
+.ok{color:rgba(0,229,255,.35);font-size:10px}
+.ov{color:#7dd3f0;font-weight:500}
+.ov.warn{color:#f59e0b}
+.ov.safe{color:var(--accent2)}
+.device-chips{display:flex;gap:6px;flex-wrap:wrap}
+.dchip{font-family:'Share Tech Mono',monospace;font-size:9px;padding:3px 9px;background:rgba(0,229,255,.06);border:1px solid var(--border);color:var(--text-dim);border-radius:2px;letter-spacing:.06em}
+
+/* ── STAT STRIP ── */
+.stat-strip{position:relative;z-index:10;border-bottom:1px solid var(--border);background:var(--bg2)}
+.stat-inner{max-width:1140px;margin:0 auto;padding:0 40px;display:flex}
+.stat-block{flex:1;padding:32px 24px;border-right:1px solid var(--border);text-align:center}
+.stat-block:last-child{border-right:none}
+.stat-n{font-family:'Orbitron',monospace;font-size:34px;font-weight:900;color:var(--accent);text-shadow:var(--glow);display:block;line-height:1}
+.stat-u{font-size:16px;color:var(--text-dim)}
+.stat-l{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:.12em;text-transform:uppercase;margin-top:6px}
+
+/* ── SHARED SECTION ── */
+.section{position:relative;z-index:10;padding:88px 0;border-bottom:1px solid var(--border)}
+.sec-inner{max-width:1140px;margin:0 auto;padding:0 40px}
+.sec-label{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px;display:block}
+.sec-title{font-family:'Orbitron',monospace;font-size:clamp(22px,3.5vw,40px);font-weight:700;color:#fff;letter-spacing:-.01em;margin-bottom:14px;line-height:1.15}
+.sec-sub{font-size:16px;color:var(--text-dim);line-height:1.7;max-width:560px;margin-bottom:56px}
+
+/* ── HOW IT WORKS ── */
+.steps{display:flex;flex-direction:column}
+.step{display:grid;grid-template-columns:72px 1fr;gap:0 36px;padding:36px 0;border-bottom:1px solid var(--border);align-items:start;opacity:0;transform:translateY(18px);transition:opacity .5s,transform .5s}
+.step.vis{opacity:1;transform:translateY(0)}
+.step:last-child{border-bottom:none}
+.step-n{font-family:'Orbitron',monospace;font-size:44px;font-weight:900;color:rgba(0,229,255,.07);line-height:1;letter-spacing:-.03em;padding-top:2px}
+.step-tag{display:inline-block;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);background:rgba(0,229,255,.07);border:1px solid rgba(0,229,255,.15);padding:3px 10px;margin-bottom:10px}
+.step-title{font-family:'Orbitron',monospace;font-size:17px;font-weight:700;color:#fff;margin-bottom:10px;letter-spacing:.01em}
+.step-desc{font-size:15px;color:var(--text-dim);line-height:1.7}
+.step-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.schip{font-family:'Share Tech Mono',monospace;font-size:10px;padding:4px 10px;background:rgba(0,229,255,.04);border:1px solid var(--border);color:var(--text-dim)}
+
+/* ── EQUIPMENT ── */
+.eq-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border)}
+.eq-card{background:var(--bg2);padding:30px 26px;position:relative;overflow:hidden;opacity:0;transform:translateY(14px);transition:opacity .4s,transform .4s,box-shadow .3s,border-color .3s;border:1px solid transparent}
+.eq-card.vis{opacity:1;transform:translateY(0)}
+.eq-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2));transform:scaleX(0);transform-origin:left;transition:transform .35s}
+.eq-card:hover{box-shadow:var(--glow);border-color:var(--border2);background:var(--bg3)}
+.eq-card:hover::before{transform:scaleX(1)}
+.eq-icon{width:46px;height:46px;background:rgba(0,229,255,.06);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:18px}
+.eq-name{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.04em;margin-bottom:4px}
+.eq-model{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px}
+.eq-desc{font-size:13px;color:var(--text-dim);line-height:1.65;margin-bottom:14px}
+.eq-role{display:inline-block;font-family:'Share Tech Mono',monospace;font-size:9px;padding:3px 10px;text-transform:uppercase;letter-spacing:.1em}
+.r-sense{background:rgba(0,229,255,.08);color:var(--accent);border:1px solid rgba(0,229,255,.2)}
+.r-power{background:rgba(255,107,53,.08);color:var(--accent3);border:1px solid rgba(255,107,53,.2)}
+.r-disp{background:rgba(0,255,136,.08);color:var(--accent2);border:1px solid rgba(0,255,136,.2)}
+.r-comm{background:rgba(167,139,250,.08);color:var(--accent4);border:1px solid rgba(167,139,250,.2)}
+.r-prog{background:rgba(255,255,255,.04);color:var(--text-dim);border:1px solid var(--border)}
+.r-alert{background:rgba(239,68,68,.08);color:#f87171;border:1px solid rgba(239,68,68,.2)}
+.eq-specs{margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
+.spec-row{display:flex;justify-content:space-between;font-family:'Share Tech Mono',monospace;font-size:10px;margin-bottom:4px}
+.sk{color:var(--text-dim)}
+.sv{color:var(--text);font-weight:500}
+
+/* ── WORKING PRINCIPLES ── */
+.wgrid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.wcard{padding:32px;background:var(--bg2);border:1px solid var(--border);position:relative;overflow:hidden;opacity:0;transform:translateY(14px);transition:opacity .5s,transform .5s,border-color .3s,box-shadow .3s}
+.wcard.vis{opacity:1;transform:translateY(0)}
+.wcard:hover{border-color:var(--border2);box-shadow:var(--glow)}
+.wcard::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--accent),transparent);transform:scaleX(0);transform-origin:left;transition:transform .35s}
+.wcard:hover::after{transform:scaleX(1)}
+.wc-head{display:flex;align-items:flex-start;gap:14px;margin-bottom:18px}
+.wc-icon{width:48px;height:48px;background:rgba(0,229,255,.06);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.wc-title{font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:#fff;margin-bottom:4px;letter-spacing:.02em}
+.wc-sub{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:.08em}
+.wc-body{font-size:13.5px;color:var(--text-dim);line-height:1.75}
+.wc-body strong{color:var(--text);font-weight:600}
+
+/* ── FLOW DIAGRAM ── */
+.flow-box{background:var(--bg2);border:1px solid var(--border);padding:44px;overflow-x:auto}
+.flow-row{display:flex;align-items:center;gap:0;flex-wrap:nowrap;min-width:820px}
+.flow-node{flex-shrink:0;background:var(--bg3);border:1px solid var(--border);padding:14px 16px;text-align:center;min-width:100px;transition:all .25s;position:relative}
+.flow-node:hover{border-color:var(--accent);box-shadow:var(--glow)}
+.flow-node.hl{background:rgba(0,229,255,.07);border-color:var(--accent);box-shadow:var(--glow)}
+.flow-node.hl2{background:rgba(0,255,136,.05);border-color:rgba(0,255,136,.4);box-shadow:var(--glow2)}
+.fn-icon{font-size:20px;margin-bottom:5px}
+.fn-name{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em}
+.flow-node.hl .fn-name{color:var(--accent)}
+.flow-node.hl2 .fn-name{color:var(--accent2)}
+.flow-arr{flex-shrink:0;width:36px;display:flex;align-items:center;justify-content:center;color:var(--text-dim);font-size:14px;animation:pulse-arr 2.5s ease infinite}
+@keyframes pulse-arr{0%,100%{opacity:.3}50%{opacity:1}}
+.flow-legend{display:flex;gap:24px;flex-wrap:wrap;margin-top:28px;padding-top:24px;border-top:1px solid var(--border)}
+.leg{display:flex;align-items:center;gap:8px}
+.leg-ln{width:26px;height:2px}
+.leg-lbl{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+
+/* ── STUDENT CARD ── */
+.student-section{position:relative;z-index:10;border-bottom:1px solid var(--border);background:var(--bg2)}
+.student-inner{max-width:1140px;margin:0 auto;padding:44px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:28px}
+.stu-left{display:flex;align-items:center;gap:22px}
+.stu-avatar{width:62px;height:62px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:2px;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-size:18px;font-weight:900;color:var(--bg);flex-shrink:0;box-shadow:var(--glow)}
+.stu-name{font-family:'Orbitron',monospace;font-size:18px;font-weight:700;color:#fff;letter-spacing:.02em;margin-bottom:8px}
+.stu-meta{display:flex;gap:0;flex-wrap:wrap}
+.stu-tag{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:.08em;padding:3px 14px 3px 0;display:flex;align-items:center;gap:8px}
+.stu-tag+.stu-tag{padding-left:14px;border-left:1px solid var(--border)}
+.stu-right{display:flex;align-items:center;gap:12px}
+.ig-btn{display:inline-flex;align-items:center;gap:9px;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--accent4);border:1px solid rgba(167,139,250,.3);background:rgba(167,139,250,.06);padding:11px 20px;text-decoration:none;letter-spacing:.08em;transition:all .25s}
+.ig-btn:hover{border-color:var(--accent4);box-shadow:var(--glow3);color:#c4b5fd}
+.ig-svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+
+/* ── FOOTER ── */
+footer{position:relative;z-index:10;padding:40px 0;border-top:1px solid var(--border);background:var(--bg)}
+.footer-inner{max-width:1140px;margin:0 auto;padding:0 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px}
+.footer-logo{font-family:'Orbitron',monospace;font-size:16px;font-weight:900;color:var(--accent);letter-spacing:.2em;text-shadow:var(--glow)}
+.footer-logo span{color:var(--accent2)}
+.footer-links{display:flex;gap:28px}
+.footer-links a{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-dim);text-decoration:none;letter-spacing:.1em;text-transform:uppercase;transition:color .2s}
+.footer-links a:hover{color:var(--accent)}
+.footer-copy{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:.08em}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+.hero-inner > .hero-content > *{animation:fadeUp .7s both}
+.hero-tag{animation-delay:.1s}
+h1{animation-delay:.2s}
+.hero-desc{animation-delay:.3s}
+.hero-btns{animation-delay:.4s}
+.stat-block:nth-child(1){animation:fadeUp .5s .1s both}
+.stat-block:nth-child(2){animation:fadeUp .5s .2s both}
+.stat-block:nth-child(3){animation:fadeUp .5s .3s both}
+.stat-block:nth-child(4){animation:fadeUp .5s .4s both}
+.stat-block:nth-child(5){animation:fadeUp .5s .5s both}
+
+/* corner deco */
+.corner-deco{position:absolute;width:20px;height:20px;pointer-events:none}
+.corner-deco.tl{top:0;left:0;border-top:1px solid var(--accent);border-left:1px solid var(--accent)}
+.corner-deco.tr{top:0;right:0;border-top:1px solid var(--accent);border-right:1px solid var(--accent)}
+.corner-deco.bl{bottom:0;left:0;border-bottom:1px solid var(--accent);border-left:1px solid var(--accent)}
+.corner-deco.br{bottom:0;right:0;border-bottom:1px solid var(--accent);border-right:1px solid var(--accent)}
+
+@media(max-width:960px){
+  .hero-inner{grid-template-columns:1fr;gap:48px}
+  .eq-grid{grid-template-columns:1fr 1fr}
+  .wgrid{grid-template-columns:1fr}
+  .stat-inner{flex-wrap:wrap}
+  .stat-block{min-width:50%;border-right:none;border-bottom:1px solid var(--border)}
+  .nav-links{display:none}
+  .nav-inner,.sec-inner,.stat-inner,.student-inner,.footer-inner{padding-left:20px;padding-right:20px}
+  .hero-inner{padding:0 20px}
+}
+@media(max-width:600px){
+  .eq-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cur"></div>
+<div id="cur-ring"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">AIR<span>SENSE</span></a>
+    <div class="nav-links">
+      <a href="#how">Process</a>
+      <a href="#equipment">Equipment</a>
+      <a href="#working">Principles</a>
+      <a href="#flow">Architecture</a>
+      <a href="#student">About</a>
+    </div>
+    <div class="nav-badge">Live Project</div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-tag">MITS Gwalior — Electronics / Circuit — Micro Project</div>
+      <h1>Portable <em>Air Quality</em><br>Monitor System</h1>
+      <p class="hero-desc">A battery-powered wireless circuit that continuously measures particulate matter, temperature, humidity, and pressure — displaying live readings on an OLED and alerting via buzzer and LED when thresholds are exceeded.</p>
+      <div class="hero-btns">
+        <a href="#how" class="btn-p">How It Works ↓</a>
+        <a href="#equipment" class="btn-s">View Components</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="device" style="position:relative">
+        <div class="corner-deco tl"></div>
+        <div class="corner-deco tr"></div>
+        <div class="corner-deco bl"></div>
+        <div class="corner-deco br"></div>
+        <div class="device-top">
+          <span class="device-id">AirSense v1.0 // BTEC25O1017</span>
+          <div class="device-led"></div>
+        </div>
+        <div class="oled">
+          <div class="or"><span class="ok">PM2.5</span><span class="ov warn" id="pm25">47 µg/m³</span></div>
+          <div class="or"><span class="ok">PM10 </span><span class="ov safe">28 µg/m³</span></div>
+          <div class="or"><span class="ok">TEMP </span><span class="ov" id="temp">29.4 °C</span></div>
+          <div class="or"><span class="ok">HUM  </span><span class="ov" id="hum">61.2 %</span></div>
+          <div class="or"><span class="ok">HPA  </span><span class="ov">1013 hPa</span></div>
+        </div>
+        <div class="device-chips">
+          <span class="dchip">PMS5003</span>
+          <span class="dchip">BME280</span>
+          <span class="dchip">SSD1306</span>
+          <span class="dchip">18650</span>
+          <span class="dchip">Wi-Fi</span>
+          <span class="dchip">TP4056</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stat-strip">
+  <div class="stat-inner">
+    <div class="stat-block"><span class="stat-n">12<span class="stat-u">+</span></span><div class="stat-l">Components</div></div>
+    <div class="stat-block"><span class="stat-n">3<span class="stat-u">ch</span></span><div class="stat-l">Sensor Channels</div></div>
+    <div class="stat-block"><span class="stat-n">3.7<span class="stat-u">V</span></span><div class="stat-l">Battery Voltage</div></div>
+    <div class="stat-block"><span class="stat-n">1<span class="stat-u">s</span></span><div class="stat-l">Update Rate</div></div>
+    <div class="stat-block"><span class="stat-n">2.4<span class="stat-u">G</span></span><div class="stat-l">Wi-Fi Band</div></div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="how">
+  <div class="sec-inner">
+    <span class="sec-label">// Process</span>
+    <h2 class="sec-title">How the System Works</h2>
+    <p class="sec-sub">From raw air samples to real-time readings — the complete signal pipeline of the AirSense monitor.</p>
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-n">01</div>
+        <div>
+          <span class="step-tag">Sensing</span>
+          <h3 class="step-title">Air &amp; Environment Sampling</h3>
+          <p class="step-desc">The PMS5003 laser particle sensor draws in ambient air and counts particles by size, outputting PM1.0, PM2.5, and PM10 concentrations. Simultaneously the BME280 reads temperature, relative humidity, and barometric pressure over I²C. Both sensors run continuously at their native polling rates, providing a complete snapshot of air quality every second.</p>
+          <div class="step-chips"><span class="schip">PMS5003</span><span class="schip">BME280</span><span class="schip">I²C Bus</span></div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-n">02</div>
+        <div>
+          <span class="step-tag">Programming</span>
+          <h3 class="step-title">Flashing &amp; Debug via FTDI</h3>
+          <p class="step-desc">The FTDI USB-TTL module bridges the computer's USB port to the MCU's UART TX/RX pins. This allows firmware to be uploaded using the Arduino IDE or PlatformIO, and serial output to be monitored in real time for debugging. The FTDI also enables configuring the Wi-Fi module by sending AT commands from a terminal window.</p>
+          <div class="step-chips"><span class="schip">FTDI USB-TTL</span><span class="schip">UART</span><span class="schip">AT Commands</span></div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-n">03</div>
+        <div>
+          <span class="step-tag">Processing</span>
+          <h3 class="step-title">Microcontroller Data Handling</h3>
+          <p class="step-desc">The MCU reads PMS5003 data via software serial UART and BME280 data via I²C. It performs unit conversions, AQI index calculations, and threshold comparisons. Results are distributed simultaneously to three output paths: the OLED display, alert system (buzzer + LED), and wireless module — all orchestrated in a tight main loop running every second.</p>
+          <div class="step-chips"><span class="schip">MCU Core</span><span class="schip">UART + I²C</span><span class="schip">Mini Breadboard</span><span class="schip">Jumper Wires</span></div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-n">04</div>
+        <div>
+          <span class="step-tag">Display</span>
+          <h3 class="step-title">OLED Live Readout</h3>
+          <p class="step-desc">The 0.96" SSD1306 OLED (128×64px, I²C) renders a fixed-width text dashboard refreshed every second. PM2.5, PM10, temperature, humidity, and pressure readings are shown in structured rows. Inverted pixel blocks visually flag dangerous readings — all without a backlight, keeping power consumption minimal for battery operation.</p>
+          <div class="step-chips"><span class="schip">0.96" OLED SSD1306</span><span class="schip">I²C 0x3C</span></div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-n">05</div>
+        <div>
+          <span class="step-tag">Alerts</span>
+          <h3 class="step-title">Buzzer &amp; LED Threshold Alerts</h3>
+          <p class="step-desc">When PM2.5 exceeds 35 µg/m³ (WHO unsafe threshold), the Active Buzzer fires a short beep pattern and the LED illuminates. The LED's current-limiting resistor (220–470Ω) protects the GPIO pin. These dual alerts enable background monitoring — no need to watch the OLED for hazardous air quality events.</p>
+          <div class="step-chips"><span class="schip">Active Buzzer</span><span class="schip">LED + Resistor</span><span class="schip">GPIO Digital Out</span></div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-n">06</div>
+        <div>
+          <span class="step-tag">Wireless</span>
+          <h3 class="step-title">Wi-Fi Data Transmission</h3>
+          <p class="step-desc">The Wi-Fi module receives formatted sensor data from the MCU over serial and publishes it to an MQTT broker or HTTP REST endpoint every 10 seconds. A companion web dashboard plots live charts and logs historical readings. Bluetooth mode allows the device to stream data directly to a paired smartphone without any router in range.</p>
+          <div class="step-chips"><span class="schip">Wi-Fi Module</span><span class="schip">MQTT / HTTP</span><span class="schip">Bluetooth</span></div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-n">07</div>
+        <div>
+          <span class="step-tag">Power</span>
+          <h3 class="step-title">Battery Power &amp; Charging</h3>
+          <p class="step-desc">An 18650 Li-ion cell supplies 3.7V. The TP4056 charging module manages safe CC/CV charging via Micro-USB, with built-in overcharge, over-discharge, and short-circuit protection. A boost converter steps voltage up where 5V components require it, making the device fully portable and field-ready.</p>
+          <div class="step-chips"><span class="schip">18650 Li-ion</span><span class="schip">TP4056 Charger</span><span class="schip">Boost Converter</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- EQUIPMENT -->
+<section class="section" id="equipment" style="background:var(--bg2)">
+  <div class="sec-inner">
+    <span class="sec-label">// Hardware</span>
+    <h2 class="sec-title">Components &amp; Equipment</h2>
+    <p class="sec-sub">Every component selected for reliability, low power draw, and prototyping accessibility.</p>
+    <div class="eq-grid">
+
+      <div class="eq-card">
+        <div class="eq-icon">💨</div>
+        <div class="eq-name">PMS5003</div>
+        <div class="eq-model">Particle Matter Sensor — UART</div>
+        <p class="eq-desc">Laser-based optical particle counter measuring PM1.0, PM2.5, and PM10 in µg/m³. A built-in fan draws air through a laser beam — particles scatter light onto a photodetector, which counts pulses to derive concentration levels.</p>
+        <span class="eq-role r-sense">Sensing</span>
+        <div class="eq-specs">
+          <div class="spec-row"><span class="sk">Interface</span><span class="sv">UART 9600 baud</span></div>
+          <div class="spec-row"><span class="sk">Range</span><span class="sv">0–500 µg/m³</span></div>
+          <div class="spec-row"><span class="sk">Voltage</span><span class="sv">5V DC</span></div>
+        </div>
+      </div>
+
+      <div class="eq-card">
+        <div class="eq-icon">🌡️</div>
+        <div class="eq-name">BME280</div>
+        <div class="eq-model">Temp / Humidity / Pressure — I²C</div>
+        <p class="eq-desc">Bosch MEMS environmental sensor combining three measurements in one package. Capacitive polymer for humidity, piezoresistive for pressure, and a thermistor bridge for temperature — all calibrated on-chip and output over I²C.</p>
+        <span class="eq-role r-sense">Sensing</span>
+        <div class="eq-specs">
+          <div class="spec-row"><span class="sk">Interface</span><span class="sv">I²C / SPI</span></div>
+          <div class="spec-row"><span class="sk">Temp range</span><span class="sv">-40 to +85 °C</span></div>
+          <div class="spec-row"><span class="sk">Voltage</span><span class="sv">1.8–3.6V</span></div>
+        </div>
+      </div>
+
+      <div class="eq-card">
+        <div class="eq-icon">🖥️</div>
+        <div class="eq-name">0.96″ OLED SSD1306</div>
+        <div class="eq-model">128×64px Monochrome — I²C</div>
+        <p class="eq-desc">Self-emitting OLED display driven by the SSD1306 controller. Each pixel lights independently — black pixels consume zero power. Communicates over I²C with just SDA and SCL, leaving most MCU pins free for other peripherals.</p>
+        <span class="eq-role r-disp">Display</span>
+        <div class="eq-specs">
+          <div class="spec-row"><span class="sk">Resolution</span><span class="sv">128 × 64 px</span></div>
+          <div class="spec-row"><span class="sk">Address</span><span class="sv">I²C 0x3C</span></div>
+          <div class="spec-row"><span class="sk">Voltage</span><span class="sv">3.3–5V</span></div>
+        </div>
+      </div>
+
+      <div class="eq-card">
+        <div class="eq-icon">🔋</div>
+        <div class="eq-name">18650 Li-ion Cell</div>
+        <div class="eq-model">Rechargeable — 3.7V Nominal</div>
+        <p class="eq-desc">Industry-standard cylindrical lithium-ion battery providing 3.7V and up to 3500 mAh capacity. Enables hours of portable operation. Must be paired with a protection circuit — handled by the TP4056 module in this design.</p>
+        <span class="eq-role r-power">Power</span>
+        <div class="eq-specs">
+          <div class="spec-row"><span class="sk">Voltage</span><span class="sv">3.7V nominal</span></div>
+          <div class="spec-row"><span class="sk">Capacity</span><span class="sv">2000–3500 mAh</span></div>
+          <div class="spec-row"><span class="sk">Chemistry</span><span class="sv">LiCoO₂</span></div>
+        </div>
+      </div>
+
+      <div class="eq-card">
+        <div class="eq-icon">⚡</div>
+        <div class="eq-name">TP4056</div>
+        <div class="eq-model">Li-ion Charger Module — Micro USB</div>
+        <p class="eq-desc">Single-cell Li-ion charging IC with CC/CV algorithm. Accepts 5V via Micro-USB and delivers up to 1A with built-in overcharge (4.2V cutoff), over-discharge, and short-circuit protection. Red/blue LEDs indicate charge status.</p>
+        <span class="eq-role r-power">Power</span>
+        <div class="eq-specs">
+          <div class="spec-row"><span class="sk">Input</span><span class="sv">5V Micro-USB</span></div>
+          <div class="spec-row"><span class="sk">Max current</span><span class="sv">1A</span></div>
+          <div class="spec-row"><span class="sk">Protection</span><span class="sv">OVP / UVP / SCP</span></div>
+        </div>
+      </div>
+
+      <div class="eq-card">
+        <div class="eq-icon">📡</div>
+        <div class="eq-name">Wi-Fi / BT Module</div>
+        <div class="eq-model">ESP8266 / ESP32 — 2.4 GHz</div>
+        <p class="eq-desc">Handles all wireless communication. Receives sensor data from the MCU via serial UART and publishes to MQTT or HTTP. ESP32 variant also supports Bluetooth Classic and BLE for direct smartphone streaming without a router.</p>
+        <span class="eq-role r-comm">Wireless</span>
+        <div class="eq-specs">
+          <div class="spec-row"><span class="sk">Band</span><span class="sv">2.4 GHz 802.11</span></div>
+          <div class="spec-row"><span class="sk">Protocol</span><span class="sv">TCP / MQTT / HTTP</span></div>
+          <div class="spec-row"><span class="sk">Voltage</span><span class="sv">3.3V</span></div>
+        </div>
+      </div>
+
+      <div class="eq-card">
+        <div class="eq-icon">🔌</div>
+        <div class="eq-name">FTDI USB-TTL</div>
+        <div class="eq-model">FT232RL — USB to UART Converter</div>
+        <p class="eq-desc">Bridges your computer's USB port to the MCU's TX/RX pins for firmware flashing, serial debugging, and AT command configuration of the Wi-Fi module. Logic level selectable between 3.3V and 5V to match the target device.</p>
+        <span class="eq-role r-prog">Programming</span>
+        <div class="eq-specs">
+          <div class="spec-row"><span class="sk">Chip</span><span class="sv">FT232RL / CH340</span></div>
+          <div class="spec-row"><span class="sk">Max baud</span><span class="sv">3 Mbps</span></div>
+          <div class="spec-row"><span class="sk">Logic</span><span class="sv">3.3V / 5V select</span></div>
+        </div>
+      </div>
+
+      <div class="eq-card">
+        <div class="eq-icon">🔴</div>
+        <div class="eq-name">Active Buzzer</div>
+        <div class="eq-model">5V — Internal Oscillator</div>
+        <p class="eq-desc">Contains its own oscillator circuit — emits a fixed-pitch tone whenever voltage is applied. The MCU triggers it with a simple digital HIGH signal, no PWM needed. Fires a beep pattern whenever PM2.5 exceeds 35 µg/m³.</p>
+        <span class="eq-role r-alert">Alert</span>
+        <div class="eq-specs">
+          <div class="spec-row"><span class="sk">Type</span><span class="sv">Active (self-oscillating)</span></div>
+          <div class="spec-row"><span class="sk">Voltage</span><span class="sv">3.3–5V</span></div>
+          <div class="spec-row"><span class="sk">Frequency</span><span class="sv">~2.4 kHz fixed</span></div>
+        </div>
+      </div>
+
+      <div class="eq-card">
+        <div class="eq-icon">💡</div>
+        <div class="eq-name">LED + Resistor</div>
+        <div class="eq-model">5mm LED — Current Limited</div>
+        <p class="eq-desc">Visual alert indicator. A series resistor — R = (Vcc − Vf) / If — limits current to a safe 10–20mA for both the MCU pin and LED lifespan. Lights solid on poor air quality and blinks on critical readings.</p>
+        <span class="eq-role r-alert">Alert</span>
+        <div class="eq-specs">
+          <div class="spec-row"><span class="sk">Forward voltage</span><span class="sv">~2.0V (red)</span></div>
+          <div class="spec-row"><span class="sk">Drive current</span><span class="sv">10–20 mA</span></div>
+          <div class="spec-row"><span class="sk">Resistor</span><span class="sv">220–470 Ω</span></div>
+        </div>
+      </div>
+
+      <div class="eq-card">
+        <div class="eq-icon">🧩</div>
+        <div class="eq-name">Mini Breadboard</div>
+        <div class="eq-model">170 / 400 Tie Points — Solderless</div>
+        <p class="eq-desc">Solderless prototyping board connecting all components without permanent soldering. Power rails run along the sides; horizontal rows short-circuit component pins. Allows rapid circuit iteration and testing with zero damage risk.</p>
+        <span class="eq-role r-prog">Prototyping</span>
+        <div class="eq-specs">
+          <div class="spec-row"><span class="sk">Tie points</span><span class="sv">170 / 400</span></div>
+          <div class="spec-row"><span class="sk">Pitch</span><span class="sv">2.54 mm standard</span></div>
+          <div class="spec-row"><span class="sk">Max current</span><span class="sv">1A per rail</span></div>
+        </div>
+      </div>
+
+      <div class="eq-card">
+        <div class="eq-icon">🔗</div>
+        <div class="eq-name">Jumper Wires</div>
+        <div class="eq-model">Male-Male &amp; Male-Female</div>
+        <p class="eq-desc">Flexible dupont-style wires for all breadboard connections. Male-to-Male wires connect rows within the breadboard; Male-to-Female wires link breakout module header pins (OLED, PMS5003, BME280) directly to the breadboard without soldering.</p>
+        <span class="eq-role r-prog">Prototyping</span>
+        <div class="eq-specs">
+          <div class="spec-row"><span class="sk">Types</span><span class="sv">M-M, M-F</span></div>
+          <div class="spec-row"><span class="sk">Length</span><span class="sv">10–20 cm</span></div>
+          <div class="spec-row"><span class="sk">Connector</span><span class="sv">2.54 mm Dupont</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- WORKING PRINCIPLES -->
+<section class="section" id="working">
+  <div class="sec-inner">
+    <span class="sec-label">// Principles</span>
+    <h2 class="sec-title">How Each Technology Works</h2>
+    <p class="sec-sub">The underlying physics and engineering behind each core component in this circuit.</p>
+    <div class="wgrid">
+
+      <div class="wcard">
+        <div class="wc-head">
+          <div class="wc-icon">💨</div>
+          <div><div class="wc-title">Laser Particle Counting</div><div class="wc-sub">PMS5003 — Mie scattering physics</div></div>
+        </div>
+        <p class="wc-body">The PMS5003 uses <strong>laser light scattering (Mie scattering)</strong>: a fan pulls ambient air through a dark chamber where a laser beam illuminates passing particles. Each particle deflects light onto a photodetector. The resulting electrical pulse duration and peak voltage correspond directly to particle size, letting firmware count and classify PM1.0, PM2.5, and PM10 concentrations in µg/m³.</p>
+      </div>
+
+      <div class="wcard">
+        <div class="wc-head">
+          <div class="wc-icon">🌡️</div>
+          <div><div class="wc-title">MEMS Environmental Sensing</div><div class="wc-sub">BME280 — Three transducers, one chip</div></div>
+        </div>
+        <p class="wc-body">The BME280 uses three <strong>MEMS transduction mechanisms</strong> on a single silicon die. <strong>Pressure:</strong> a microscopic silicon diaphragm deflects under air pressure, read as a capacitance change. <strong>Temperature:</strong> a resistive thermistor bridge changes resistance with heat. <strong>Humidity:</strong> a capacitive polymer layer absorbs water vapor, altering its dielectric constant. All three are digitized on-chip with 16–20 bit ADCs and factory-calibrated.</p>
+      </div>
+
+      <div class="wcard">
+        <div class="wc-head">
+          <div class="wc-icon">🖥️</div>
+          <div><div class="wc-title">Organic LED Display</div><div class="wc-sub">SSD1306 — Self-emitting pixel matrix</div></div>
+        </div>
+        <p class="wc-body">Unlike LCD panels, OLED pixels <strong>emit their own light</strong> — each is a tiny organic electroluminescent sandwich. When a forward voltage is applied, holes and electrons recombine in the organic emissive layer, releasing photons. The SSD1306 manages charge injection into the 128×64 matrix via row/column drivers over I²C. Pixels set to black draw <strong>zero current</strong> — no backlight, no wasted power — ideal for battery-powered embedded displays.</p>
+      </div>
+
+      <div class="wcard">
+        <div class="wc-head">
+          <div class="wc-icon">🔋</div>
+          <div><div class="wc-title">Lithium-Ion Electrochemistry</div><div class="wc-sub">18650 + TP4056 — CC/CV charge management</div></div>
+        </div>
+        <p class="wc-body">Li-ion cells store energy through <strong>intercalation</strong>: during charging, Li⁺ ions migrate from the LiCoO₂ cathode through electrolyte into the graphite anode lattice. The TP4056 implements <strong>Constant Current / Constant Voltage (CC/CV)</strong> charging — first pushing full current while voltage rises, then switching to constant 4.2V while current tapers to ~10% of rated value, signalling full charge and maximising capacity without cell damage.</p>
+      </div>
+
+      <div class="wcard">
+        <div class="wc-head">
+          <div class="wc-icon">📡</div>
+          <div><div class="wc-title">802.11 Wi-Fi Radio</div><div class="wc-sub">ESP Module — OFDM packet transmission</div></div>
+        </div>
+        <p class="wc-body">The ESP module uses <strong>OFDM (Orthogonal Frequency-Division Multiplexing)</strong> on the 2.4 GHz ISM band. Sensor data is broken into TCP/IP packets, modulated onto orthogonal subcarriers, and sent to a router. MQTT adds a lightweight publish/subscribe layer on top — the device publishes to a topic, and any subscribed client (dashboard, phone) receives updates instantly. Bluetooth uses <strong>FHSS</strong> for short-range secure pairing.</p>
+      </div>
+
+      <div class="wcard">
+        <div class="wc-head">
+          <div class="wc-icon">🔴</div>
+          <div><div class="wc-title">Alert Output Circuitry</div><div class="wc-sub">Buzzer + LED — Ohm's Law in action</div></div>
+        </div>
+        <p class="wc-body">The <strong>active buzzer</strong> houses its own RC oscillator — voltage applied produces a fixed ~2.4 kHz tone with zero MCU overhead, no PWM required. The <strong>LED</strong> requires a series resistor calculated by Ohm's Law: <strong>R = (Vcc − Vf) / If</strong>. For 5V supply and red LED (Vf ≈ 2.0V, If = 15mA): R = (5−2)/0.015 = 200Ω → use standard <strong>220Ω</strong>. This keeps GPIO current well below the MCU's 40mA maximum pin rating.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SYSTEM FLOW -->
+<section class="section" id="flow" style="background:var(--bg2)">
+  <div class="sec-inner">
+    <span class="sec-label">// Architecture</span>
+    <h2 class="sec-title">System Data Flow</h2>
+    <p class="sec-sub">Complete signal path — from the physical environment through to a remote cloud dashboard.</p>
+    <div class="flow-box">
+      <div class="flow-row">
+        <div class="flow-node"><div class="fn-icon">💨</div><div class="fn-name">PMS5003</div></div>
+        <div class="flow-arr">→</div>
+        <div class="flow-node"><div class="fn-icon">🌡️</div><div class="fn-name">BME280</div></div>
+        <div class="flow-arr">→</div>
+        <div class="flow-node hl"><div class="fn-icon">⚙️</div><div class="fn-name">MCU Core</div></div>
+        <div class="flow-arr">→</div>
+        <div class="flow-node"><div class="fn-icon">🖥️</div><div class="fn-name">OLED</div></div>
+        <div class="flow-arr">→</div>
+        <div class="flow-node"><div class="fn-icon">🔴</div><div class="fn-name">Buzzer+LED</div></div>
+        <div class="flow-arr">→</div>
+        <div class="flow-node"><div class="fn-icon">📡</div><div class="fn-name">Wi-Fi Mod</div></div>
+        <div class="flow-arr">→</div>
+        <div class="flow-node hl2"><div class="fn-icon">☁️</div><div class="fn-name">Dashboard</div></div>
+      </div>
+      <div class="flow-legend">
+        <div class="leg"><div class="leg-ln" style="background:var(--text-dim)"></div><span class="leg-lbl" style="color:var(--text-dim)">UART Serial</span></div>
+        <div class="leg"><div class="leg-ln" style="background:var(--accent)"></div><span class="leg-lbl" style="color:var(--accent)">I²C Bus (SDA/SCL)</span></div>
+        <div class="leg"><div class="leg-ln" style="background:var(--accent2)"></div><span class="leg-lbl" style="color:var(--accent2)">Digital GPIO</span></div>
+        <div class="leg"><div class="leg-ln" style="background:var(--accent3)"></div><span class="leg-lbl" style="color:var(--accent3)">Wi-Fi TCP/MQTT</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STUDENT CARD -->
+<div class="student-section" id="student">
+  <div class="student-inner">
+    <div class="stu-left">
+      <div class="stu-avatar">AS</div>
+      <div>
+        <div class="stu-name">Avinash Singh Paviya</div>
+        <div class="stu-meta">
+          <span class="stu-tag">Roll No. BTEC25O1017</span>
+          <span class="stu-tag">MITS, Gwalior</span>
+          <span class="stu-tag">Electronics &amp; Circuit</span>
+        </div>
+      </div>
+    </div>
+    <div class="stu-right">
+      <a href="https://instagram.com/avinashsingh1095" target="_blank" rel="noopener" class="ig-btn">
+        <svg class="ig-svg" viewBox="0 0 24 24">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+          <circle cx="12" cy="12" r="4"/>
+          <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/>
+        </svg>
+        @avinashsingh1095
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">AIR<span>SENSE</span></div>
+    <div class="footer-links">
+      <a href="#how">Process</a>
+      <a href="#equipment">Equipment</a>
+      <a href="#working">Principles</a>
+      <a href="#flow">Architecture</a>
+    </div>
+    <div class="footer-copy">MITS Gwalior — Micro Project v1.0 — Avinash Singh Paviya</div>
+  </div>
+</footer>
+
+<script>
+/* ── CUSTOM CURSOR ── */
+const cur = document.getElementById('cur');
+const ring = document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; });
+(function animCursor(){
+  cur.style.left = mx+'px'; cur.style.top = my+'px';
+  rx += (mx-rx)*.13; ry += (my-ry)*.13;
+  ring.style.left = rx+'px'; ring.style.top = ry+'px';
+  requestAnimationFrame(animCursor);
+})();
+document.querySelectorAll('a,button').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{ ring.style.transform='translate(-50%,-50%) scale(1.6)'; ring.style.borderColor='rgba(0,255,136,.6)'; });
+  el.addEventListener('mouseleave',()=>{ ring.style.transform='translate(-50%,-50%) scale(1)'; ring.style.borderColor='rgba(0,229,255,.45)'; });
+});
+
+/* ── SCROLL REVEAL ── */
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{ if(e.isIntersecting) setTimeout(()=>e.target.classList.add('vis'), i*65); });
+},{threshold:0.1});
+document.querySelectorAll('.step,.eq-card,.wcard').forEach(el=>obs.observe(el));
+
+/* ── SMOOTH SCROLL ── */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'});}
+  });
+});
+
+/* ── OLED LIVE VALUES ── */
+setInterval(()=>{
+  const pm=document.getElementById('pm25');
+  const temp=document.getElementById('temp');
+  const hum=document.getElementById('hum');
+  if(pm)   pm.textContent   = (47+(Math.random()*6-3)).toFixed(0)+' µg/m³';
+  if(temp) temp.textContent = (29.4+(Math.random()*.6-.3)).toFixed(1)+' °C';
+  if(hum)  hum.textContent  = (61.2+(Math.random()*1.5-.75)).toFixed(1)+' %';
+},1800);
+
+/* ── NAV ACTIVE HIGHLIGHT ── */
+const sections=document.querySelectorAll('section[id],div[id]');
+const navLinks=document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll',()=>{
+  let cur='';
+  sections.forEach(s=>{ if(window.scrollY>=s.offsetTop-120) cur=s.id; });
+  navLinks.forEach(a=>{ a.style.color=a.getAttribute('href')==='#'+cur?'var(--accent)':''; });
+},{passive:true});
+</script>
+</body>
+</html>
